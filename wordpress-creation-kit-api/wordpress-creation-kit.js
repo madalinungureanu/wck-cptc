@@ -57,7 +57,7 @@ function addMeta(value, id, nonce){
 					jQuery( '#'+value ).remove();
 				
 				jQuery('#mb-ajax-loading').remove();
-			});
+			});			
 		});	
 }
 

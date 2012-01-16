@@ -540,6 +540,9 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 		$meta = $_POST['meta'];
 		$id = absint($_POST['id']);
 		echo self::wck_output_meta_content($meta, $id, $this->args['meta_array']);
+		
+		do_action( "wck_refresh_list_{$meta}" );
+		
 		exit;
 	}
 	

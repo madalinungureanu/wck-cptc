@@ -54,7 +54,7 @@ function wck_cptc_create_box(){
 		array( 'type' => 'text', 'title' => 'Post type', 'description' => '(max. 20 characters, can not contain capital letters, hyphens, or spaces)' ), 
 		array( 'type' => 'textarea', 'title' => 'Description', 'description' => 'A short descriptive summary of what the post type is.' ),
 		array( 'type' => 'text', 'title' => 'Singular Label' ),
-		array( 'type' => 'upload', 'title' => 'Plural Label' ),
+		array( 'type' => 'text', 'title' => 'Plural Label' ),
 		array( 'type' => 'select', 'title' => 'Public', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => 'Meta argument used to define default values for publicly_queriable, show_ui, show_in_nav_menus and exclude_from_search' ),
 		array( 'type' => 'select', 'title' => 'Show UI', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => 'Whether to generate a default UI for managing this post type.' ), 
 		array( 'type' => 'text', 'title' => 'Menu Position', 'description' => 'The position in the menu order the post type should appear.' ), 
@@ -146,5 +146,10 @@ function wck_cptc_update_form_wrapper_end( $form, $i ){
 	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-update-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
 	
 	return $form;
+}
+
+add_action("wck_refresh_list_wck_cptc", "wck_cptc_after_refresh_list");
+function wck_cptc_after_refresh_list(){
+	echo '<script type="text/javascript">window.location.reload();</script>';
 }
 ?>
