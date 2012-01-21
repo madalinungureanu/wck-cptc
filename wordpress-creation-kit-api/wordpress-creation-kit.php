@@ -188,7 +188,10 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 		}
 		
 		
-		$element .= '<label for="'. esc_attr( sanitize_title_with_dashes( remove_accents ( $details['title'] ) ) ) .'" class="field-label">'. ucfirst($details['title']) .':</label>';
+		$element .= '<label for="'. esc_attr( sanitize_title_with_dashes( remove_accents ( $details['title'] ) ) ) .'" class="field-label">'. ucfirst($details['title']) .':';
+		if( $details['required'] )
+			$element .= '<span class="required">*</span>';
+		$element .= '</label>';
 		
 		$element .= '<div class="mb-right-column">';
 		
@@ -204,7 +207,7 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 			$element .= '<select name="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] ) ) ) .'"  id="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] ) ) ) .'" class="mb-select mb-field" >';
 			
 			if( !empty( $details['default-option'] ) && $details['default-option'] )
-				$element .= '<option value="default">Select</option>';
+				$element .= '<option value="">Select</option>';
 			
 			if( !empty( $details['options'] ) ){
 					foreach( $details['options'] as $option ){
@@ -410,14 +413,14 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 				
 				foreach($result as $key => $value){
 					
-					$list = apply_filters( "wck_before_listed_{$meta}_element_{$j}", $list, $j );				
+					$list = apply_filters( "wck_before_listed_{$meta}_element_{$j}", $list, $i );				
 					
 					$details = $fields[$j];
-					$list .= '<li><strong>'.$details['title'].': </strong>'.$value.' </li>';				
-					$j++;
+					$list .= '<li><strong>'.$details['title'].': </strong>'.$value.' </li>';							
 					
-					$list = apply_filters( "wck_after_listed_{$meta}_element_{$j}", $list, $j );
+					$list = apply_filters( "wck_after_listed_{$meta}_element_{$j}", $list, $i );
 					
+					$j++;					
 				}
 				$list .= '</ul></td>';				
 				$list .= '<td style="text-align:center;vertical-align:middle;"><a href="javascript:void(0)"  onclick=\'showUpdateFormMeta("'.esc_js($meta).'", "'.esc_js($id).'", "'.esc_js($i).'", "'.esc_js($edit_nonce).'")\' title="Edit this item">Edit</a></td>';
@@ -462,14 +465,44 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 				wp_enqueue_style('wordpress-creation-kit-css');	
 			}
 		}
-	}	
+	}
+
+	/* Helper function for required fields */
+	function wck_test_required( $meta, $values ){
+		$fields = $this->args['meta_array'];
+		$required_fields = array();
+		$required_fields_with_errors = array();
+		$required_message = '';
+		
+		foreach( $fields as $field ){
+			if( $field['required'] )
+				$required_fields[sanitize_title_with_dashes( remove_accents ( $field['title'] ) )] = $field['title'];
+		}
+		
+		foreach( $values as $key => $value ){
+			if( array_key_exists( $key, $required_fields ) && apply_filters( "wck_required_test_{$meta}_{$key}", empty( $value ), $value ) ){
+				$required_message .= apply_filters( "wck_required_message_{$meta}_{$key}", "Please enter a value for the required field $required_fields[$key] \n" );
+				$required_fields_with_errors[] = $key;
+			}
+		}	
+		
+		if( $required_message != '' ){
+			header( 'Content-type: application/json' );
+			die( json_encode( array( 'error' => $required_message, 'errorfields' => $required_fields_with_errors ) ) );
+		}
+		
+	}
+	
 
 	/* ajax add a reccord to the meta */
 	function wck_add_meta(){
 		check_ajax_referer( "wck-add-meta" );	
 		$meta = $_POST['meta'];
 		$id = absint($_POST['id']);
-		$values = $_POST['values'];		
+		$values = $_POST['values'];
+		
+		/* check required fields */
+		self::wck_test_required( $meta, $values );		
 		
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
@@ -505,7 +538,8 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 		$element_id = $_POST['element_id'];	
 		$values = $_POST['values'];
 		
-		
+		/* check required fields */
+		self::wck_test_required( $meta, $values );
 		
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
@@ -1034,7 +1068,8 @@ class WCK_CPTC_WCK_Page_Creator{
 							'icon_url' => '',
 							'position' => '',
 							'parent_slug' => '',
-							'priority' => 10
+							'priority' => 10,
+							'network_page' => false
 						);
 	private $args;
 	public $hookname;
@@ -1052,8 +1087,14 @@ class WCK_CPTC_WCK_Page_Creator{
 		/* Add the settings for this page to the global object */
 		$wck_pages[$this->args['page_title']] = $this->args;
 		
-		/* Hook the page function to 'admin_menu'. */
-		add_action( 'admin_menu', array( &$this, 'wck_page_init' ), $this->args['priority'] );				
+		if( !$this->args['network_page'] ){		
+			/* Hook the page function to 'admin_menu'. */
+			add_action( 'admin_menu', array( &$this, 'wck_page_init' ), $this->args['priority'] );
+		}
+		else{
+			/* Hook the page function to 'admin_menu'. */
+			add_action( 'network_admin_menu', array( &$this, 'wck_page_init' ), $this->args['priority'] );
+		}				
 	}
 
 	

@@ -29,35 +29,48 @@ function addMeta(value, id, nonce){
 		else		
 			values[key.toString()] = jQuery(this).val().toString();
 	});
-
-	console.log(values);
 	
-	jQuery.post( ajaxurl ,  { action:"wck_add_meta"+value, meta:value, id:id, values:values, _ajax_nonce:nonce}, function(response) {	
-			console.log(response);
-			/* refresh the list */
-			jQuery.post( ajaxurl ,  { action:"wck_refresh_list"+value, meta:value, id:id}, function(response) {					
-				
-				jQuery('#container_'+value).replaceWith(response);
-				
-				jQuery('.mb-table-container tbody td').css('width', function(){ return jQuery(this).width() });
-				
-				if( !jQuery( '#'+value ).hasClass('single') )
-					mb_sortable_elements();
-					
-				jQuery('#'+value+' .mb-field').each(function(){
-					if(jQuery(this).attr('type') == 'checkbox' || jQuery(this).attr('type') == 'radio' ) 
-						jQuery(this).removeAttr( 'checked' );	
-					else
-						jQuery(this).val('');					
-				});				
-				jQuery('#'+value).parent().css('opacity','1');	
-				
-				/* Remove form if is single */
-				if( jQuery( '#'+value ).hasClass('single') )
-					jQuery( '#'+value ).remove();
-				
+	
+	jQuery.post( ajaxurl ,  { action:"wck_add_meta"+value, meta:value, id:id, values:values, _ajax_nonce:nonce}, function(response) {
+
+			jQuery( '#'+value+' .field-label').removeClass('error');
+		
+			if( response.error ){
+				jQuery('#'+value).parent().css('opacity','1');
 				jQuery('#mb-ajax-loading').remove();
-			});			
+				
+				for( var i in response.errorfields ){
+					jQuery( '#'+value+' .field-label[for="' + response.errorfields[i] + '"]' ).addClass('error');
+				}				
+
+				alert( response.error );
+			}
+			else{		
+				/* refresh the list */
+				jQuery.post( ajaxurl ,  { action:"wck_refresh_list"+value, meta:value, id:id}, function(response) {					
+					
+					jQuery('#container_'+value).replaceWith(response);
+					
+					jQuery('.mb-table-container tbody td').css('width', function(){ return jQuery(this).width() });
+					
+					if( !jQuery( '#'+value ).hasClass('single') )
+						mb_sortable_elements();
+						
+					jQuery('#'+value+' .mb-field').each(function(){
+						if(jQuery(this).attr('type') == 'checkbox' || jQuery(this).attr('type') == 'radio' ) 
+							jQuery(this).removeAttr( 'checked' );	
+						else
+							jQuery(this).val('');					
+					});				
+					jQuery('#'+value).parent().css('opacity','1');	
+					
+					/* Remove form if is single */
+					if( jQuery( '#'+value ).hasClass('single') )
+						jQuery( '#'+value ).remove();
+					
+					jQuery('#mb-ajax-loading').remove();
+				});
+			}
 		});	
 }
 
@@ -191,19 +204,33 @@ function updateMeta(value, id, element_id, nonce){
 		
 	});	
 	
-	jQuery.post( ajaxurl ,  { action:"wck_update_meta"+value, meta:value, id:id, element_id:element_id, values:values, _ajax_nonce:nonce}, function(response) {			
-			jQuery('#update_container_'+value+'_'+element_id).remove();
-			/* refresh the list */
-			jQuery.post( ajaxurl ,  { action:"wck_refresh_list"+value, meta:value, id:id}, function(response) {	
-				jQuery('#container_'+value).replaceWith(response);
-				
-				jQuery('.mb-table-container tbody td').css('width', function(){ return jQuery(this).width() });
-				
-				mb_sortable_elements();
+	jQuery.post( ajaxurl ,  { action:"wck_update_meta"+value, meta:value, id:id, element_id:element_id, values:values, _ajax_nonce:nonce}, function(response) {
+
+			jQuery( '#update_container_'+value+'_'+element_id + ' .field-label').removeClass('error');
+		
+			if( response.error ){
 				jQuery('#'+value).parent().css('opacity','1');
-				jQuery('#mb-ajax-loading').remove();				
-			});
-			
+				jQuery('#mb-ajax-loading').remove();
+				
+				for( var i in response.errorfields ){
+					jQuery( '#update_container_'+value+'_'+element_id + ' .field-label[for="' + response.errorfields[i] + '"]' ).addClass('error');
+				}				
+
+				alert( response.error );
+			}
+			else{
+				jQuery('#update_container_'+value+'_'+element_id).remove();
+				/* refresh the list */
+				jQuery.post( ajaxurl ,  { action:"wck_refresh_list"+value, meta:value, id:id}, function(response) {	
+					jQuery('#container_'+value).replaceWith(response);
+					
+					jQuery('.mb-table-container tbody td').css('width', function(){ return jQuery(this).width() });
+					
+					mb_sortable_elements();
+					jQuery('#'+value).parent().css('opacity','1');
+					jQuery('#mb-ajax-loading').remove();				
+				});
+			}
 		});	
 }
 

@@ -16,6 +16,15 @@
 	padding-right:10px;
 }
 
+.field-label.error{
+	color:#ff0000;
+}
+
+.field-label .required{
+	color:#ff0000;
+	padding:0 2px;
+}
+
 .mb-right-column label{
 	padding:0 6px 0 3px;
 }
