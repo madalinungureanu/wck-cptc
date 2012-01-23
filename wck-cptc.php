@@ -35,9 +35,11 @@ $args = array(
 $cptc_page = new WCK_CPTC_WCK_Page_Creator( $args );
 
 
-
+/* create the meta box */
 add_action( 'init', 'wck_cptc_create_box', 11 );
 function wck_cptc_create_box(){
+	
+	/* get registered taxonomies */
 	$args = array( 
 				'public'   => true 
 			);
@@ -49,7 +51,8 @@ function wck_cptc_create_box(){
 		if ( $taxonomie->name != 'nav_menu' && $taxonomie->name != 'post_format')
 			$taxonomie_names[] = $taxonomie->name;
 	}
-
+	
+	/* set up the fields array */
 	$cpt_creation_fields = array( 
 		array( 'type' => 'text', 'title' => 'Post type', 'description' => '(max. 20 characters, can not contain capital letters, hyphens, or spaces)', 'required' => true ), 
 		array( 'type' => 'textarea', 'title' => 'Description', 'description' => 'A short descriptive summary of what the post type is.' ),
@@ -79,7 +82,8 @@ function wck_cptc_create_box(){
 		array( 'type' => 'select', 'title' => 'Rewrite', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => 'Rewrite permalinks.' ),
 		array( 'type' => 'text', 'title' => 'Rewrite Slug', 'description' => 'Defaults to post type name.' )
 	);
-
+	
+	/* set up the box arguments */
 	$args = array(
 		'metabox_id' => 'option_page',
 		'metabox_title' => 'Custom Post Type Creation',
@@ -90,10 +94,11 @@ function wck_cptc_create_box(){
 		'sortable' => false
 	);
 
-
+	/* create the box */
 	new WCK_CPTC_Wordpress_Creation_Kit( $args );
 }
 
+/* hook to create custom post types */
 add_action( 'init', 'wck_cptc_create_cpts' );
 
 function wck_cptc_create_cpts(){
@@ -159,30 +164,31 @@ function cptc_flush_rules(){
 /* advanced labels container for add form */
 add_action( "wck_before_add_form_wck_cptc_element_4", 'wck_cptc_form_label_wrapper_start' );
 function wck_cptc_form_label_wrapper_start(){
+	echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-label-options-container\').toggle(); if( jQuery(this).text() == \'Show Advanced Label Options\' ) jQuery(this).text(\'Hide Advanced Label Options\');  else if( jQuery(this).text() == \'Hide Advanced Label Options\' ) jQuery(this).text(\'Show Advanced Label Options\');">Show Advanced Label Options</a></li>';
 	echo '<li id="cptc-advanced-label-options-container" style="display:none;"><ul>';
 }
 
 add_action( "wck_after_add_form_wck_cptc_element_13", 'wck_cptc_form_label_wrapper_end' );
 function wck_cptc_form_label_wrapper_end(){
-	echo '</ul></li>';
-	echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-label-options-container\').toggle(); if( jQuery(this).text() == \'Show Advanced Label Options\' ) jQuery(this).text(\'Hide Advanced Label Options\');  else if( jQuery(this).text() == \'Hide Advanced Label Options\' ) jQuery(this).text(\'Show Advanced Label Options\');">Show Advanced Label Options</a></li>';
+	echo '</ul></li>';	
 }
 
 /* advanced options container for add form */
 add_action( "wck_before_add_form_wck_cptc_element_14", 'wck_cptc_form_wrapper_start' );
 function wck_cptc_form_wrapper_start(){
+	echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-container\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
 	echo '<li id="cptc-advanced-options-container" style="display:none;"><ul>';
 }
 
 add_action( "wck_after_add_form_wck_cptc_element_24", 'wck_cptc_form_wrapper_end' );
 function wck_cptc_form_wrapper_end(){
-	echo '</ul></li>';
-	echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-container\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
+	echo '</ul></li>';	
 }
 
 /* advanced label options container for update form */
 add_filter( "wck_before_update_form_wck_cptc_element_4", 'wck_cptc_update_form_label_wrapper_start', 10, 2 );
 function wck_cptc_update_form_label_wrapper_start( $form, $i ){
+	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-label-options-update-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Label Options\' ) jQuery(this).text(\'Hide Advanced Label Options\');  else if( jQuery(this).text() == \'Hide Advanced Label Options\' ) jQuery(this).text(\'Show Advanced Label Options\');">Show Advanced Label Options</a></li>';
 	$form .= '<li id="cptc-advanced-label-options-update-container-'.$i.'" style="display:none;"><ul>';
 	return $form;
 }
@@ -190,23 +196,20 @@ function wck_cptc_update_form_label_wrapper_start( $form, $i ){
 add_filter( "wck_after_update_form_wck_cptc_element_13", 'wck_cptc_update_form_label_wrapper_end', 10, 2 );
 function wck_cptc_update_form_label_wrapper_end( $form, $i ){
 	$form .=  '</ul></li>';
-	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-label-options-update-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Label Options\' ) jQuery(this).text(\'Hide Advanced Label Options\');  else if( jQuery(this).text() == \'Hide Advanced Label Options\' ) jQuery(this).text(\'Show Advanced Label Options\');">Show Advanced Label Options</a></li>';
-	
 	return $form;
 }
 
 /* advanced options container for update form */
 add_filter( "wck_before_update_form_wck_cptc_element_14", 'wck_cptc_update_form_wrapper_start', 10, 2 );
 function wck_cptc_update_form_wrapper_start( $form, $i ){
+	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-update-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
 	$form .= '<li id="cptc-advanced-options-update-container-'.$i.'" style="display:none;"><ul>';
 	return $form;
 }
 
 add_filter( "wck_after_update_form_wck_cptc_element_24", 'wck_cptc_update_form_wrapper_end', 10, 2 );
 function wck_cptc_update_form_wrapper_end( $form, $i ){
-	$form .=  '</ul></li>';
-	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-update-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
-	
+	$form .=  '</ul></li>';	
 	return $form;
 }
 
@@ -214,30 +217,28 @@ function wck_cptc_update_form_wrapper_end( $form, $i ){
 /* advanced label options container for display */
 add_filter( "wck_before_listed_wck_cptc_element_4", 'wck_cptc_display_label_wrapper_start', 10, 2 );
 function wck_cptc_display_label_wrapper_start( $form, $i ){
+	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-label-options-display-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Labels\' ) jQuery(this).text(\'Hide Advanced Labels\');  else if( jQuery(this).text() == \'Hide Advanced Labels\' ) jQuery(this).text(\'Show Advanced Labels\');">Show Advanced Labels</a></li>';
 	$form .= '<li id="cptc-advanced-label-options-display-container-'.$i.'" style="display:none;"><ul>';
 	return $form;
 }
 
 add_filter( "wck_after_listed_wck_cptc_element_13", 'wck_cptc_display_label_wrapper_end', 10, 2 );
 function wck_cptc_display_label_wrapper_end( $form, $i ){
-	$form .=  '</ul></li>';
-	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-label-options-display-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Labels\' ) jQuery(this).text(\'Hide Advanced Labels\');  else if( jQuery(this).text() == \'Hide Advanced Labels\' ) jQuery(this).text(\'Show Advanced Labels\');">Show Advanced Labels</a></li>';
-	
+	$form .=  '</ul></li>';	
 	return $form;
 }
 
 /* advanced options container for display */
 add_filter( "wck_before_listed_wck_cptc_element_14", 'wck_cptc_display_adv_wrapper_start', 10, 2 );
 function wck_cptc_display_adv_wrapper_start( $form, $i ){
+	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-display-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
 	$form .= '<li id="cptc-advanced-options-display-container-'.$i.'" style="display:none;"><ul>';
 	return $form;
 }
 
 add_filter( "wck_after_listed_wck_cptc_element_24", 'wck_cptc_display_adv_wrapper_end', 10, 2 );
 function wck_cptc_display_adv_wrapper_end( $form, $i ){
-	$form .=  '</ul></li>';
-	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-display-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
-	
+	$form .=  '</ul></li>';	
 	return $form;
 }
 
