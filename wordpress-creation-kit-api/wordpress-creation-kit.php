@@ -226,7 +226,7 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 						
 						if ( strpos($value, $option) !== false ) 
 							$found = true;
-						$element .= '<input type="checkbox" name="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] ) ) ) .'" id="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] . '_' . $option ) ) ) .'" value="'. $option .'"  '. checked( $found, true, false ) .'class="mb-checkbox mb-field" /><label for="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] . '_' .$option ) ) ) .'">'. $option .'</label><br />' ;
+						$element .= '<div><input type="checkbox" name="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] ) ) ) .'" id="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] . '_' . $option ) ) ) .'" value="'. $option .'"  '. checked( $found, true, false ) .'class="mb-checkbox mb-field" /><label for="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] . '_' .$option ) ) ) .'">'. $option .'</label></div>' ;
 					}
 			}
 			
@@ -240,7 +240,7 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 						
 						if ( strpos($value, $option) !== false ) 
 							$found = true;
-						$element .= '<input type="radio" name="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] ) ) ) .'" id="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] . '_' . $option ) ) ) .'" value="'. $option .'"  '. checked( $found, true, false ) .'class="mb-radio mb-field" /><label for="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] . '_' .$option ) ) ) .'">'. $option .'</label><br />';
+						$element .= '<div><input type="radio" name="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] ) ) ) .'" id="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] . '_' . $option ) ) ) .'" value="'. $option .'"  '. checked( $found, true, false ) .'class="mb-radio mb-field" /><label for="'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] . '_' .$option ) ) ) .'">'. $option .'</label></div>';
 					}
 			}
 			
@@ -290,7 +290,7 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 					do_action( "wck_before_add_form_{$meta}_element_{$element_id}" );
 					
 					?>
-						<li>
+						<li class="row-<?php echo esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] ) ) ) ?>">
 							<?php echo self::wck_output_form_field( $meta, $details ); ?>
 						</li>
 					<?php
@@ -345,7 +345,7 @@ class WCK_CPTC_Wordpress_Creation_Kit{
 				
 				$form = apply_filters( "wck_before_update_form_{$meta}_element_{$i}", $form, $element_id );
 				
-				$form .= '<li>';
+				$form .= '<li class="row-'. esc_attr( sanitize_title_with_dashes( remove_accents( $details['title'] ) ) ) .'">';
 				
 				$form .= self::wck_output_form_field( $meta, $details, $value, 'edit_form' ); 
 				
@@ -1184,9 +1184,11 @@ class WCK_CPTC_WCK_Page_Creator{
 				<?php do_action( 'wck_before_meta_boxes', $this->hookname ); ?>
 				
 				<div class="metabox-holder">
-					<div class="post-box-container column-1 normal"><?php do_meta_boxes( $this->hookname, 'normal', null ); ?></div>
 					<div class="post-box-container column-2 side"><?php do_meta_boxes( $this->hookname, 'side', null ); ?></div>
-					<div class="post-box-container column-3 advanced"><?php do_meta_boxes( $this->hookname, 'advanced', null ); ?></div>
+					<div class="wck-post-body">
+						<div class="post-box-container column-1 normal"><?php do_meta_boxes( $this->hookname, 'normal', null ); ?></div>
+						<div class="post-box-container column-3 advanced"><?php do_meta_boxes( $this->hookname, 'advanced', null ); ?></div>					</div>
+					
 				</div>			
 				
 				<?php do_action( 'wck_after_meta_boxes', $this->hookname ); ?>

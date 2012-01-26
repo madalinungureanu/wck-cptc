@@ -35,6 +35,15 @@ $args = array(
 $cptc_page = new WCK_CPTC_WCK_Page_Creator( $args );
 
 
+/* Add Scripts */
+add_action('admin_enqueue_scripts', 'wck_cptc_print_scripts' );
+function wck_cptc_print_scripts($hook){		
+	if( 'wck_page_cptc-page' == $hook ){			
+		wp_register_style('wck-cptc-css', plugins_url('/css/wck-cptc.css', __FILE__));
+		wp_enqueue_style('wck-cptc-css');	
+	}	
+}
+
 /* create the meta box */
 add_action( 'init', 'wck_cptc_create_box', 11 );
 function wck_cptc_create_box(){
@@ -247,5 +256,30 @@ function wck_cptc_display_adv_wrapper_end( $form, $i ){
 add_action("wck_refresh_list_wck_cptc", "wck_cptc_after_refresh_list");
 function wck_cptc_after_refresh_list(){
 	echo '<script type="text/javascript">window.location="'. get_admin_url() . 'admin.php?page=cptc-page&updated=true' .'";</script>';
+}
+
+/* Add side metaboxes */
+add_action('add_meta_boxes', 'wck_cptc_add_side_boxes' );
+function wck_cptc_add_side_boxes(){
+	add_meta_box( 'wck-cptc-side', 'Side Box', 'wck_cptc_side_box_one', 'wck_page_cptc-page', 'side', 'high' );
+}
+function wck_cptc_side_box_one(){
+	?>
+		<iframe src="http://www.cozmoslabs.com/iframes/cozmoslabs_plugin_iframe.php?origin=<?php echo get_option('home'); ?>" width="260" id="wck-iframe"></iframe>
+		<script type="text/javascript">			
+			var onmessage = function(e) {
+				if( e.origin == 'http://www.cozmoslabs.com' )
+					jQuery('#wck-iframe').height(e.data);			
+			}
+			if(window.postMessage) {
+				if(typeof window.addEventListener != 'undefined') {
+					window.addEventListener('message', onmessage, false);
+				}
+				else if(typeof window.attachEvent != 'undefined') {
+					window.attachEvent('onmessage', onmessage);
+				}
+			}			
+		</script>
+	<?php
 }
 ?>
