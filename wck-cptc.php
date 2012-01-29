@@ -25,7 +25,7 @@ function wck_remove_wck_submanu_page(){
 
 /* Create the CPTC Page */
 $args = array(							
-			'page_title' => 'CPTC',
+			'page_title' => 'WCK Custom Post Type Creator',
 			'menu_title' => 'CPTC',
 			'capability' => 'edit_theme_options',
 			'menu_slug' => 'cptc-page',									
@@ -281,5 +281,70 @@ function wck_cptc_side_box_one(){
 			}			
 		</script>
 	<?php
+}
+
+
+/* Contextual Help */
+add_action('load-wck_page_cptc-page', 'wck_cptc_help');
+
+function wck_cptc_help () {    
+    $screen = get_current_screen();
+
+    /*
+     * Check if current screen is wck_page_cptc-page
+     * Don't add help tab if it's not
+     */
+    if ( $screen->id != 'wck_page_cptc-page' )
+        return;
+
+    // Add help tabs
+    $screen->add_help_tab( array(
+        'id'	=> 'my_help_tab',
+        'title'	=> __('My Help Tab'),
+        'content'	=> '<p>' . __( 'Descriptive content that will show in My Help Tab-body goes here.' ) . '</p>',
+    ) );
+	
+	$screen->add_help_tab( array(
+        'id'	=> 'my_help_tab2',
+        'title'	=> __('My Help Tab 2'),
+        'content'	=> '<p>' . __( 'Descriptive content that will goes here.' ) . '</p>',
+    ) );
+}
+
+/* Sync with taxonomies */
+add_action('load-wck_page_cptc-page', 'wck_cptc_sync_with_taxonomies');
+function wck_cptc_sync_with_taxonomies(){	
+	$wck_ctcs = get_option( 'wck_ctc' );
+	echo 'xxxxxx';
+	if( !empty( $wck_ctcs ) ){
+		echo '000000';
+		$cpts = get_option('wck_cptc');
+		if( !empty( $cpts ) ){
+			foreach( $cpts as $cpt ){
+				if( !empty( $wck_ctcs ) ){
+					foreach( $wck_ctcs as $wck_ctc ){
+						echo '11111';
+						$post_types_attached_to_taxonomie = $wck_ctc['attach-to'];
+						$post_types_attached_to_taxonomie = explode( ', ', $post_types_attached_to_taxonomie );
+						if( !empty( $post_types_attached_to_taxonomie ) ){
+							foreach( $post_types_attached_to_taxonomie as $pt ){
+								echo 'aaaaa';
+								if( $pt == $cpt['post-type'] ){
+									echo 'bbbbbb';
+									$taxonomies = explode( ', ', $cpt['taxonomies'] );
+									if( !in_array( $wck_ctc['taxonomy'], $taxonomies ) || empty( $taxonomies ) ){
+										$taxonomies[] = $wck_ctc['taxonomy'];
+										$cpt['taxonomies'] = implode( ', ', $taxonomies );
+										echo $cpt['taxonomies'];
+									}
+								}
+							}
+						}						
+					}	
+				}
+			}
+		}		
+		update_option( 'wck_cptc', $cpts );		
+	}
 }
 ?>
