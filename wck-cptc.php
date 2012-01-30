@@ -310,41 +310,4 @@ function wck_cptc_help () {
         'content'	=> '<p>' . __( 'Descriptive content that will goes here.' ) . '</p>',
     ) );
 }
-
-/* Sync with taxonomies */
-add_action('load-wck_page_cptc-page', 'wck_cptc_sync_with_taxonomies');
-function wck_cptc_sync_with_taxonomies(){	
-	$wck_ctcs = get_option( 'wck_ctc' );
-	echo 'xxxxxx';
-	if( !empty( $wck_ctcs ) ){
-		echo '000000';
-		$cpts = get_option('wck_cptc');
-		if( !empty( $cpts ) ){
-			foreach( $cpts as $cpt ){
-				if( !empty( $wck_ctcs ) ){
-					foreach( $wck_ctcs as $wck_ctc ){
-						echo '11111';
-						$post_types_attached_to_taxonomie = $wck_ctc['attach-to'];
-						$post_types_attached_to_taxonomie = explode( ', ', $post_types_attached_to_taxonomie );
-						if( !empty( $post_types_attached_to_taxonomie ) ){
-							foreach( $post_types_attached_to_taxonomie as $pt ){
-								echo 'aaaaa';
-								if( $pt == $cpt['post-type'] ){
-									echo 'bbbbbb';
-									$taxonomies = explode( ', ', $cpt['taxonomies'] );
-									if( !in_array( $wck_ctc['taxonomy'], $taxonomies ) || empty( $taxonomies ) ){
-										$taxonomies[] = $wck_ctc['taxonomy'];
-										$cpt['taxonomies'] = implode( ', ', $taxonomies );
-										echo $cpt['taxonomies'];
-									}
-								}
-							}
-						}						
-					}	
-				}
-			}
-		}		
-		update_option( 'wck_cptc', $cpts );		
-	}
-}
 ?>
