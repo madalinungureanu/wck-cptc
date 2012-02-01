@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WCK CPTC
-Description: Creates Custom POst types
+Description: Creates Custom Post types
 */
 
 /* include Custom Fields Creator API */
@@ -9,7 +9,7 @@ require_once('wordpress-creation-kit-api/wordpress-creation-kit.php');
 
 /* Create the WCK Page */
 $args = array(							
-			'page_title' => 'WCK',
+			'page_title' => 'Wordpress Creation Kit',
 			'menu_title' => 'WCK',
 			'capability' => 'edit_theme_options',
 			'menu_slug' => 'wck-page',									
@@ -26,7 +26,7 @@ function wck_remove_wck_submanu_page(){
 /* Create the CPTC Page */
 $args = array(							
 			'page_title' => 'WCK Custom Post Type Creator',
-			'menu_title' => 'CPTC',
+			'menu_title' => 'Custom Post Type Creator',
 			'capability' => 'edit_theme_options',
 			'menu_slug' => 'cptc-page',									
 			'page_type' => 'submenu_page',
@@ -65,8 +65,8 @@ function wck_cptc_create_box(){
 	$cpt_creation_fields = array( 
 		array( 'type' => 'text', 'title' => 'Post type', 'description' => '(max. 20 characters, can not contain capital letters, hyphens, or spaces)', 'required' => true ), 
 		array( 'type' => 'textarea', 'title' => 'Description', 'description' => 'A short descriptive summary of what the post type is.' ),
-		array( 'type' => 'text', 'title' => 'Singular Label', 'required' => true ),
-		array( 'type' => 'text', 'title' => 'Plural Label', 'required' => true ),
+		array( 'type' => 'text', 'title' => 'Singular Label', 'required' => true, 'description' => 'ex. Book' ),
+		array( 'type' => 'text', 'title' => 'Plural Label', 'required' => true, 'description' => 'ex. Books' ),
 		array( 'type' => 'select', 'title' => 'Hierarchical', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => 'Whether the post type is hierarchical. Allows Parent to be specified.' ),
 		array( 'type' => 'select', 'title' => 'Has Archive', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => 'Enables post type archives. Will use string as archive slug. Will generate the proper rewrite rules if rewrite is enabled.' ),
 		array( 'type' => 'checkbox', 'title' => 'Supports', 'options' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes', 'post-formats' ), 'default' =>'title, editor' ),
@@ -81,6 +81,7 @@ function wck_cptc_create_box(){
 		array( 'type' => 'text', 'title' => 'Search Items', 'description' => 'ex. Search Books' ),
 		array( 'type' => 'text', 'title' => 'Not Found', 'description' => 'ex. No Books Found' ),
 		array( 'type' => 'text', 'title' => 'Not Found In Trash', 'description' => 'ex. No Books found in Trash' ),	
+		array( 'type' => 'text', 'title' => 'Parent Item Colon', 'description' => 'the parent text. This string isn\'t used on non-hierarchical types. In hierarchical ones the default is Parent Page ' ),	
 		array( 'type' => 'text', 'title' => 'Menu Name' ),			
 		
 		array( 'type' => 'select', 'title' => 'Public', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => 'Meta argument used to define default values for publicly_queriable, show_ui, show_in_nav_menus and exclude_from_search' ),
@@ -128,7 +129,7 @@ function wck_cptc_create_cpts(){
 				'search_items' => __( $cpt['search-items'] ? $cpt['search-items'] : "Search ".$cpt['plural-label']),
 				'not_found' =>  __( $cpt['not-found'] ? $cpt['not-found'] : "No ". strtolower( $cpt['plural-label'] ) ." found"),
 				'not_found_in_trash' => __( $cpt['not-found-in-trash'] ? $cpt['not-found-in-trash'] :  "No ". strtolower( $cpt['plural-label'] ) ." found in Trash"), 
-				'parent_item_colon' => '',
+				'parent_item_colon' => __( $cpt['parent-item-colon'] ? $cpt['parent-item-colon'] :  "Parent Page"),
 				'menu_name' => $cpt['menu-name'] ? $cpt['menu-name'] : $cpt['plural-label']
 			);
 			$args = array(
@@ -178,19 +179,19 @@ function wck_cptc_form_label_wrapper_start(){
 	echo '<li id="cptc-advanced-label-options-container" style="display:none;"><ul>';
 }
 
-add_action( "wck_after_add_form_wck_cptc_element_16", 'wck_cptc_form_label_wrapper_end' );
+add_action( "wck_after_add_form_wck_cptc_element_17", 'wck_cptc_form_label_wrapper_end' );
 function wck_cptc_form_label_wrapper_end(){
 	echo '</ul></li>';	
 }
 
 /* advanced options container for add form */
-add_action( "wck_before_add_form_wck_cptc_element_17", 'wck_cptc_form_wrapper_start' );
+add_action( "wck_before_add_form_wck_cptc_element_18", 'wck_cptc_form_wrapper_start' );
 function wck_cptc_form_wrapper_start(){
 	echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-container\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
 	echo '<li id="cptc-advanced-options-container" style="display:none;"><ul>';
 }
 
-add_action( "wck_after_add_form_wck_cptc_element_24", 'wck_cptc_form_wrapper_end' );
+add_action( "wck_after_add_form_wck_cptc_element_25", 'wck_cptc_form_wrapper_end' );
 function wck_cptc_form_wrapper_end(){
 	echo '</ul></li>';	
 }
@@ -203,21 +204,21 @@ function wck_cptc_update_form_label_wrapper_start( $form, $i ){
 	return $form;
 }
 
-add_filter( "wck_after_update_form_wck_cptc_element_16", 'wck_cptc_update_form_label_wrapper_end', 10, 2 );
+add_filter( "wck_after_update_form_wck_cptc_element_17", 'wck_cptc_update_form_label_wrapper_end', 10, 2 );
 function wck_cptc_update_form_label_wrapper_end( $form, $i ){
 	$form .=  '</ul></li>';
 	return $form;
 }
 
 /* advanced options container for update form */
-add_filter( "wck_before_update_form_wck_cptc_element_17", 'wck_cptc_update_form_wrapper_start', 10, 2 );
+add_filter( "wck_before_update_form_wck_cptc_element_18", 'wck_cptc_update_form_wrapper_start', 10, 2 );
 function wck_cptc_update_form_wrapper_start( $form, $i ){
 	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-update-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
 	$form .= '<li id="cptc-advanced-options-update-container-'.$i.'" style="display:none;"><ul>';
 	return $form;
 }
 
-add_filter( "wck_after_update_form_wck_cptc_element_24", 'wck_cptc_update_form_wrapper_end', 10, 2 );
+add_filter( "wck_after_update_form_wck_cptc_element_25", 'wck_cptc_update_form_wrapper_end', 10, 2 );
 function wck_cptc_update_form_wrapper_end( $form, $i ){
 	$form .=  '</ul></li>';	
 	return $form;
@@ -232,21 +233,21 @@ function wck_cptc_display_label_wrapper_start( $form, $i ){
 	return $form;
 }
 
-add_filter( "wck_after_listed_wck_cptc_element_16", 'wck_cptc_display_label_wrapper_end', 10, 2 );
+add_filter( "wck_after_listed_wck_cptc_element_17", 'wck_cptc_display_label_wrapper_end', 10, 2 );
 function wck_cptc_display_label_wrapper_end( $form, $i ){
 	$form .=  '</ul></li>';	
 	return $form;
 }
 
 /* advanced options container for display */
-add_filter( "wck_before_listed_wck_cptc_element_17", 'wck_cptc_display_adv_wrapper_start', 10, 2 );
+add_filter( "wck_before_listed_wck_cptc_element_18", 'wck_cptc_display_adv_wrapper_start', 10, 2 );
 function wck_cptc_display_adv_wrapper_start( $form, $i ){
 	$form .=  '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-display-container-'.$i.'\').toggle(); if( jQuery(this).text() == \'Show Advanced Options\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \'Hide Advanced Options\' ) jQuery(this).text(\'Show Advanced Options\');">Show Advanced Options</a></li>';
 	$form .= '<li id="cptc-advanced-options-display-container-'.$i.'" style="display:none;"><ul>';
 	return $form;
 }
 
-add_filter( "wck_after_listed_wck_cptc_element_24", 'wck_cptc_display_adv_wrapper_end', 10, 2 );
+add_filter( "wck_after_listed_wck_cptc_element_25", 'wck_cptc_display_adv_wrapper_end', 10, 2 );
 function wck_cptc_display_adv_wrapper_end( $form, $i ){
 	$form .=  '</ul></li>';	
 	return $form;
@@ -299,15 +300,21 @@ function wck_cptc_help () {
 
     // Add help tabs
     $screen->add_help_tab( array(
-        'id'	=> 'my_help_tab',
-        'title'	=> __('My Help Tab'),
-        'content'	=> '<p>' . __( 'Descriptive content that will show in My Help Tab-body goes here.' ) . '</p>',
+        'id'	=> 'wck_cptc_overview',
+        'title'	=> __('Overview'),
+        'content'	=> '<p>' . __( 'WCK Custom Post Type Creator allows you to easily create custom post types for Wordpress without any programming knowledge.<br />Most of the common options for creating a post type are displayed by default while the advanced options and label are just one click away.' ) . '</p>',
     ) );
 	
 	$screen->add_help_tab( array(
-        'id'	=> 'my_help_tab2',
-        'title'	=> __('My Help Tab 2'),
-        'content'	=> '<p>' . __( 'Descriptive content that will goes here.' ) . '</p>',
+        'id'	=> 'wck_cptc_labels',
+        'title'	=> __('Labels'),
+        'content'	=> '<p>' . __( 'For simplicity you are required to introduce only the Singular Label and Plural Label from wchich the rest of the labels will be formed.<br />For a more detailed control of the labels you just have to click the "Show Advanced Label Options" link and all the availabel labels will be displayed' ) . '</p>',
+    ) );
+	
+	$screen->add_help_tab( array(
+        'id'	=> 'wck_cptc_advanced',
+        'title'	=> __('Advanced Options'),
+        'content'	=> '<p>' . __( 'The Advanced Options are set to the most common defaults for custom post types. To display them click the "Show Advanced Options" link.' ) . '</p>',
     ) );
 }
 ?>
