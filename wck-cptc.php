@@ -134,13 +134,13 @@ function wck_cptc_create_cpts(){
 			);
 			$args = array(
 				'labels' => $labels,
-				'public' => $cpt['public'],
+				'public' => (bool)$cpt['public'],
 				'description'	=> $cpt['description'],
 				'publicly_queryable' => true,
-				'show_ui' => $cpt['show-ui'], 	
+				'show_ui' => (bool)$cpt['show-ui'], 	
 				'show_in_menu' => true, 				
-				'has_archive' => $cpt['has-archive'],
-				'hierarchical' => $cpt['hierarchical'],							
+				'has_archive' => (bool)$cpt['has-archive'],
+				'hierarchical' => (bool)$cpt['hierarchical'],							
 				'menu_position' => $cpt['menu-position'],
 				'capability_type' => $cpt['capability-type'],
 				'supports' => explode( ', ', $cpt['supports'] )				
@@ -152,8 +152,8 @@ function wck_cptc_create_cpts(){
 			if( !empty( $cpt['menu-icon'] ) )
 				$args['menu_icon'] = $cpt['menu-icon'];
 				
-			if( $cpt['rewrite'] == false )
-				$args['rewrite'] = $cpt['rewrite'];
+			if( $cpt['rewrite'] == 'false' )
+				$args['rewrite'] = (bool)$cpt['rewrite'];
 			else{
 				if( !empty( $cpt['rewrite-slug'] ) )
 					$args['rewrite'] = array('slug' => $cpt['rewrite-slug']);
