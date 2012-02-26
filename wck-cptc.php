@@ -25,8 +25,8 @@ function wck_remove_wck_submanu_page(){
 
 /* Create the CPTC Page */
 $args = array(							
-			'page_title' => 'WCK Custom Post Type Creator',
-			'menu_title' => 'Custom Post Type Creator',
+			'page_title' => 'WCK Post Type Creator',
+			'menu_title' => 'Post Type Creator',
 			'capability' => 'edit_theme_options',
 			'menu_slug' => 'cptc-page',									
 			'page_type' => 'submenu_page',
@@ -255,6 +255,7 @@ function wck_cptc_display_adv_wrapper_end( $form, $i ){
 
 /* add refresh to page */
 add_action("wck_refresh_list_wck_cptc", "wck_cptc_after_refresh_list");
+add_action("wck_refresh_entry_wck_cptc", "wck_cptc_after_refresh_list");
 function wck_cptc_after_refresh_list(){
 	echo '<script type="text/javascript">window.location="'. get_admin_url() . 'admin.php?page=cptc-page&updated=true' .'";</script>';
 }
@@ -262,7 +263,7 @@ function wck_cptc_after_refresh_list(){
 /* Add side metaboxes */
 add_action('add_meta_boxes', 'wck_cptc_add_side_boxes' );
 function wck_cptc_add_side_boxes(){
-	add_meta_box( 'wck-cptc-side', 'Side Box', 'wck_cptc_side_box_one', 'wck_page_cptc-page', 'side', 'high' );
+	add_meta_box( 'wck-cptc-side', 'Wordpress Creation Kit', 'wck_cptc_side_box_one', 'wck_page_cptc-page', 'side', 'high' );
 }
 function wck_cptc_side_box_one(){
 	?>

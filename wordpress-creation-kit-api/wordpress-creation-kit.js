@@ -1,6 +1,9 @@
 /* Add width to elements at startup */
 jQuery(function(){
 	jQuery('.mb-table-container tbody td').css('width', function(){ return jQuery(this).width() });
+	
+	
+	
 });
 
 /* add reccord to the meta */
@@ -152,7 +155,12 @@ function mb_sortable_elements() {
 				});
 			}
 		});
-		jQuery( "#sortable" ).disableSelection();	
+		jQuery( "#sortable" ).disableSelection();
+
+
+		jQuery('.mb-table-container ul').mousedown( function(e){		
+			e.stopPropagation();
+		});	
 }
 jQuery(mb_sortable_elements);
 
@@ -161,15 +169,16 @@ jQuery(mb_sortable_elements);
 /* show the update form */
 function showUpdateFormMeta(value, id, element_id, nonce){
 	if( jQuery( '#update_container_' + value + '_' + element_id ).length == 0 ){
-		jQuery('#'+value).parent().css({'opacity':'0.4', 'position':'relative'}).append('<div id="mb-ajax-loading"></div>');
+		jQuery('#container_'+value).parent().css({'opacity':'0.4', 'position':'relative'}).append('<div id="mb-ajax-loading"></div>');
 		
 		jQuery( '#container_' + value + " tbody" ).sortable("disable");
 		
 		jQuery.post( ajaxurl ,  { action:"wck_show_update"+value, meta:value, id:id, element_id:element_id, _ajax_nonce:nonce}, function(response) {	
 				//jQuery('#container_'+value+' #element_'+element_id).append(response);
 				jQuery(response).insertAfter('#container_'+value+' #element_'+element_id);
-				jQuery('#'+value).parent().css('opacity','1');
+				jQuery('#container_'+value).parent().css('opacity','1');
 				jQuery('#mb-ajax-loading').remove();
+				wckGoToByScroll('update_container_' + value + '_' + element_id);
 		});
 	}
 }
@@ -181,7 +190,7 @@ function removeUpdateForm( id ){
 
 /* update reccord */
 function updateMeta(value, id, element_id, nonce){
-	jQuery('#'+value).parent().css({'opacity':'0.4', 'position':'relative'}).append('<div id="mb-ajax-loading"></div>');
+	jQuery('#container_'+value).parent().css({'opacity':'0.4', 'position':'relative'}).append('<div id="mb-ajax-loading"></div>');
 	var values = {};	
 	jQuery('#update_container_'+value+'_'+element_id+' .mb-field').each(function(){
 		var key = jQuery(this).attr('name');		
@@ -209,7 +218,7 @@ function updateMeta(value, id, element_id, nonce){
 			jQuery( '#update_container_'+value+'_'+element_id + ' .field-label').removeClass('error');
 		
 			if( response.error ){
-				jQuery('#'+value).parent().css('opacity','1');
+				jQuery('#container_'+value).parent().css('opacity','1');
 				jQuery('#mb-ajax-loading').remove();
 				
 				for( var i in response.errorfields ){
@@ -221,13 +230,14 @@ function updateMeta(value, id, element_id, nonce){
 			else{
 				jQuery('#update_container_'+value+'_'+element_id).remove();
 				/* refresh the list */
-				jQuery.post( ajaxurl ,  { action:"wck_refresh_list"+value, meta:value, id:id}, function(response) {	
-					jQuery('#container_'+value).replaceWith(response);
+				jQuery.post( ajaxurl ,  { action:"wck_refresh_entry"+value, meta:value, id:id, element_id:element_id}, function(response) {	
+					jQuery('#container_'+value+' #element_'+element_id).replaceWith(response);
 					
 					jQuery('.mb-table-container tbody td').css('width', function(){ return jQuery(this).width() });
 					
-					mb_sortable_elements();
-					jQuery('#'+value).parent().css('opacity','1');
+					jQuery( '#container_' + value + " tbody" ).sortable("enable");
+					
+					jQuery('#container_'+value).parent().css('opacity','1');
 					jQuery('#mb-ajax-loading').remove();				
 				});
 			}
@@ -240,4 +250,8 @@ function wckSyncTranslation(id){
 			if( response == 'syncsuccess' )
 				window.location.reload();			
 		});	
+}
+
+function wckGoToByScroll(id){
+     	jQuery('html,body').animate({scrollTop: jQuery("#"+id).offset().top - 28},'slow');
 }
