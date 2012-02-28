@@ -1,7 +1,27 @@
 <?php
 /*
-Plugin Name: WCK CPTC
-Description: Creates Custom Post types
+Plugin Name: WCK Post Type Creator
+Description: Creates Custom Post Types for Wordpress
+Author: Reflection Media, Madalin Ungureanu
+Version: 1.0
+Author URI: http://www.reflectionmedia.ro
+
+License: GPL2
+
+== Copyright ==
+Copyright 2011 Reflection Media (wwww.reflectionmedia.ro)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
 /* include Custom Fields Creator API */
@@ -309,7 +329,7 @@ function wck_cptc_help () {
 	$screen->add_help_tab( array(
         'id'	=> 'wck_cptc_labels',
         'title'	=> __('Labels'),
-        'content'	=> '<p>' . __( 'For simplicity you are required to introduce only the Singular Label and Plural Label from wchich the rest of the labels will be formed.<br />For a more detailed control of the labels you just have to click the "Show Advanced Label Options" link and all the availabel labels will be displayed' ) . '</p>',
+        'content'	=> '<p>' . __( 'For simplicity you are required to introduce only the Singular Label and Plural Label from wchich the rest of the labels will be formed.<br />For a more detailed control of the labels you just have to click the "Show Advanced Label Options" link and all the availabel labels will be displayed.' ) . '</p>',
     ) );
 	
 	$screen->add_help_tab( array(

@@ -1,108 +1,69 @@
-Usage Example 1
+=== WCK Custom Fields Creator === 
 
- <?php
+Contributors: reflectionmedia, madalin.ungureanu
+Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
+Tags: registration, profile, user registration, custom field registration, customize profile, user fields, builder, profile builder, custom profile, user profile, custom user profile, user profile page, 
+custom registration, custom registration form, custom registration page, extra user fields, registration page, user custom fields, user listing, user login, user registration form, front-end login, 
+front-end register, front-end registration, frontend edit profile, edit profile
+Requires at least: 3.1
+Tested up to: 3.3
+Stable tag: 1.1.24
+
+Simple to use profile plugin allowing front-end login, registration and edit profile by using shortcodes. 
  
-	$fint = array( 
-		array( 'type' => 'text', 'title' => 'Title', 'description' => 'Description for this input' ), 
-		array( 'type' => 'textarea', 'title' => 'Description' ), 
-		array( 'type' => 'upload', 'title' => 'Image', 'description' => 'Upload a image' ), 
-		array( 'type' => 'select', 'title' => 'Select This', 'options' => array( 'Option 1', 'Option 2', 'Option 3' ) ),
+== Description ==
+
+Profile Builder is WordPress registration done right. 
+
+It lets you customize your website by adding a front-end menu for all your users, 
+giving them a more flexible way to modify their user-information or register new users (front-end registration). 
+Also, grants users with administrator rights to customize basic user fields or add custom ones. 
+
+To achieve this, just create a new page and give it an intuitive name(i.e. Edit Profile).
+Now all you need to do is add the following shortcode(for the previous example): [wppb-edit-profile]. 
+Publish the page and you are done!
+
+You can use the following shortcodes:
+
+* **[wppb-edit-profile]** - to grant users front-end access to their personal information (requires user to be logged in).
+* **[wppb-login]** - to add a front-end log-in form.
+* **[wppb-register]** - to add a front-end registration form.
+* **[wppb-recover-password]** - to add a password recovery form.
+
+Users with administrator rights have access to the following features:
+
+* add a custom stylesheet/inherit values from the current theme or use one of the following built into this plugin: default, white or black.
+* select whether to display or not the admin bar in the front end for a specific user-group registered to the site.
+* select which information-field can users see/modify. The hidden fields values remain unmodified.
+
+
+
+== Installation ==
+
+1. Upload the profile-builder folder to the '/wp-content/plugins/' directory
+1. Activate the plugin through the 'Plugins' menu in WordPress
+1. Create a new page and use one of the shortcodes available. Publish the page and you're done!
+
+== Frequently Asked Questions ==
+
+= I navigated away from Profile Builder and now I can’t find it anymore; where is it? =
 	
-		array( 'type' => 'checkbox', 'title' => 'Check This', 'options' => array( 'Option 1', 'Option 2', 'Option 3' ) ), 
-	
-		array( 'type' => 'radio', 'title' => 'Radio This', 'options' => array( 'Radio 1', 'Radio 2', 'Radio 3' ) ), 
-	);
+	Profile Builder can be found in the default menu of your WordPress installation under the “Users” sub-menu.
 
-	$args = array(
-		'metabox_id' => 'rm_slider_content',
-		'metabox_title' => 'Slideshow Class',
-		'post_type' => 'slideshows',
-		'meta_name' => 'rmscontent',
-		'meta_array' => $fint	
-	);
+= Why do the custom WordPress fields still show up, even though I set it to be "hidden"? =
 
-	new Wordpress_Creation_Kit( $args );
+	Profile Builder only disables the default fields in the front-end of your site/blog, it does absolutely nothing in the dashboard.
+ 
 
- ?> 
+= I can’t find a question similar to my issue; Where can I find support? =
 
-For Frontend use like this:
-
-<?php $meta = get_post_meta( $post->ID, 'rmscontent', true ); ?>
+	For more information please visit http://www.cozmoslabs.com and check out the faq section from Profile Builder
 
 
-
-
-Default Parameters
-
-<?php $args = array(
-    'metabox_id' => '',
-	'metabox_title' => 'Meta Box',
-	'post_type' => 'post',
-	'meta_name' => '',
-	'meta_array' => array(),
-	'page_template' => '',
-	'post_id' => '',
-	'single' => false ?> 
-	
-Parameters
-
-$metabox_id
-    (string) (required) HTML 'id' attribute of the edit screen section
-
-        Default: None 
-
-$metabox_title
-    (string) (required) Title of the edit screen section, visible to user 
-	
-		Default: 'Meta Box' 
-
-$post_type 
-	(string) (required) The type of Write screen on which to show the edit screen section ('post', 'page', 'link', or 'custom_post_type' where custom_post_type is the custom post type slug)
-
-    Default: 'post' 
-	
-$meta_name 
-	(string) (required) The name of the meta key used to query for data 
-
-    Default: None 
-	
-$meta_array 
-	(array) (required) The array of fields used to create the form. See example above. Must be array( array() ). Type and Title are required.
-
-    Default: None 
-	
-$page_template 
-	(string) (optional) The name of the page template on wich you want the meta box to appear. If this is set than  $post_type can be omitted.
-
-    Default: None  
-	
-$post_id 
-	(string) (optional) The id of the post you want the meta box to appear. If this is set than  $post_type can be omitted.
-
-    Default: None  	
-	
-$single 
-	(boolean) (optional) Set this to true if you don't want a repeater box and you will be able to enter just one value.
-
-    Default: false 
-	
-wpml_compatibility
-	(boolean) (optional) Set this to true if you want to enable wpml compatibility
-	
-How to add into a plugin:
-
-1. Copy the foldder "custom-fields-creator" into the plugin dir
-2. Change the class name "Wordpress_Creation_Kit" if multiple plugins use custom-fields-creator on the same site.
-3. Include "custom-fields-creator.php" into the plugin file 
-	
-	/* include Custom Fields Creator API */
-	require_once('custom-fields-creator/custom-fields-creator.php');
-
-4. Use the API as in Exampe 1, in your plugin file or functions or whatever fits the situation.
-
-
-WPML Compatibility
-
-When wpml_compatibility is true on a meta box, besides saving the contents of the box in one serialized custom field, we create automatically a custom field for every field in every entry. We do this because WPML can't handle serialized custom fields and also we will get good control on what actions we want to perform (don't translate, copy, translate ) on each of the fields. 
-
-After the fields are translated with Icanlcalize and we have the translated post in our system, we can go on the translated post and press the "Syncronize WCK Translation" button which will create the serialized array from the individual custom fields.
+== Screenshots ==
+1. Basic information: screenshot1.jpg
+2. Layout Control: screenshot2.jpg
+3. Show/Hide Admin Bar: screenshot3.jpg
+4. Select Default User Fields: screenshot4
+6. Register Page: screenshot6.jpg
+7. Logged in Page: screenshot7.jpg
