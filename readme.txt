@@ -1,8 +1,8 @@
-=== WCK Post Type Creator === 
+=== Custom Post Type Creator === 
 
 Contributors: reflectionmedia, madalin.ungureanu
-Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/post-type-creator/
-Tags: post type creator, custom post type creator, custom post type, post type
+Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/custom-post-type-creator/
+Tags: post type creator, custom post type creator, custom post type, post type, custom post type builder, post type builder
 Requires at least: 3.1
 Tested up to: 3.3.1
 Stable tag: 1.0
