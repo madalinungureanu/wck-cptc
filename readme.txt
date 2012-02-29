@@ -45,5 +45,5 @@ endwhile;?>`
 This simply loops through the latest 10 product posts and displays the title and content of them. 
 
 == Screenshots ==
-1. Post Type reator UI: screenshot-1.jpg
-2. Post Type reator UI and listing: screenshot-2.jpg
+1. Post Type Creator UI: screenshot-1.jpg
+2. Post Type Creator UI and listing: screenshot-2.jpg
